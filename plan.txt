@@ -1,0 +1,13 @@
+Ideas for PW App
+
+- Login
+    - Username + Password
+    - 2FA
+
+- App
+    - Generate passwords
+    - Access passwords
+
+- Login
+    - admin
+    - ominous password
