@@ -1,12 +1,18 @@
 require('dotenv').config()
 const express = require("express")
 const session = require('express-session');
+const MongoDBStore = require('connect-mongodb-session')(session);
 const passport = require('passport')
 const mongoose = require('mongoose');
 const authRouter = require('./server/api/auth')
 require("./server/lib/passport")
 
 const app = express()
+
+const store = new MongoDBStore({
+    uri: process.env.MONGO_URI,
+    collection: 'sessions'
+});
 
 async function run() { 
     await mongoose.connect(process.env.MONGO_URI)
@@ -29,6 +35,7 @@ async function run() {
         secret: process.env.SESSION_SECRET,
         resave: false,
         saveUninitialized: false,
+        store,
     }));
     app.use(passport.session())
 
