@@ -1,12 +1,34 @@
+const passport = require('passport');
 const express = require('express')
 
-const router = express.Router()
+const authRouter = express.Router()
 
-router.post('/login', 
-  passport.authenticate('local', { failureRedirect: '/login' }),
+authRouter.get('/current-user', (req, res) => {
+  if (!req.user) {
+    return res.json(null)
+  }
+
+  res.json({
+    email: req.user.email,
+  })
+})
+
+authRouter.post('/login', (req, res) => {
+    passport.authenticate('local', function(err, user, info) {
+        if (err) {
+            return res.status(400).send('Invalid login')
+        }
+        req.login(user, () => {
+            res.send()
+        })
+    })(req, res)
+});
+
+authRouter.post('/signup',
+  passport.authenticate('local-signup'),
   function(req, res) {
     res.send()
   });
 
-module.exports = router
+module.exports = authRouter
 

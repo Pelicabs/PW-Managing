@@ -1,35 +1,45 @@
 require('dotenv').config()
 const express = require("express")
+const session = require('express-session');
+const MongoDBStore = require('connect-mongodb-session')(session);
+const passport = require('passport')
 const mongoose = require('mongoose');
-const Password = require('./server/models/Password.model');
-
-
+const authRouter = require('./server/api/auth')
+require("./server/lib/passport")
 
 const app = express()
+
+const store = new MongoDBStore({
+    uri: process.env.MONGO_URI,
+    collection: 'sessions'
+});
 
 async function run() { 
     await mongoose.connect(process.env.MONGO_URI)
     console.log("Connected to database")
-    const Tim = new Password({
-        label: 'Email',
-        value: '45678',
-        userID: 'Tim'
-    })
-    await Tim.save()
-    const passwords = await Password.find()
-    console.log(passwords)
+    
     app.use(express.urlencoded({ extended: true }));
     app.use(express.json());
 
-    app.use((req, res, next) => {
-        req.user = {
-            _id: '12345',
-            username: 'marcus',
-            password: 'hashedpassword',
-        }
+    // app.use((req, res, next) => {
+    //     req.user = {
+    //         _id: '12345',
+    //         username: 'marcus',
+    //         password: 'hashedpassword',
+    //     }
 
-        next()
-    })
+    //     next()
+    // })
+
+    app.use(session({
+        secret: process.env.SESSION_SECRET,
+        resave: false,
+        saveUninitialized: false,
+        store,
+    }));
+    app.use(passport.session())
+
+    app.use('/api/auth', authRouter)
 
     // req = request, res = response
     app.get('/', (req, res) => {
