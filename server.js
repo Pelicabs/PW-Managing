@@ -5,6 +5,7 @@ const MongoDBStore = require('connect-mongodb-session')(session);
 const passport = require('passport')
 const mongoose = require('mongoose');
 const authRouter = require('./server/api/auth')
+const passwordRouter = require('./server/api/passwords')
 require("./server/lib/passport")
 
 const app = express()
@@ -40,6 +41,8 @@ async function run() {
     app.use(passport.session())
 
     app.use('/api/auth', authRouter)
+
+    app.use('/api/passwords', passwordRouter)
 
     // req = request, res = response
     app.get('/', (req, res) => {
