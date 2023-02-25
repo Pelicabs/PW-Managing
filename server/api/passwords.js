@@ -7,7 +7,7 @@ const router = express.Router()
 
 //Actions
 //Add new password [DONE]
-//Edit existing password (edit value/label)
+//Edit existing password (edit value/label) [DONE]
 //Remove an existing password
 //View a password (unasterisk it)
 
@@ -58,11 +58,21 @@ router.put('/:id', async (req,res) => {
         }
         updates.label = req.body.newLabel
     }
-    if (req.body.newValue ** req.body.newValue !== existingPW.value) {
+    if (req.body.newValue && req.body.newValue !== existingPW.value) {
         updates.value = req.body.newValue
     }
-    console.log(updates)
     await Password.updateOne({_id: req.params.id}, updates)
+
+    res.send()
+})
+
+router.delete('/:id', async (req,res) => {
+    const existingPW = await Password.findOne({_id: req.params.id}) 
+    if (!existingPW) {
+        res.status(404).send()
+        return
+    }
+    await Password.deleteOne({_id: req.params.id})
 
     res.send()
 })
