@@ -1,7 +1,8 @@
 const passport = require('passport');
 const express = require('express')
 
-const authRouter = express.Router()
+const AsyncRouter = require("express-async-router").AsyncRouter
+var authRouter = AsyncRouter()
 
 authRouter.get('/current-user', (req, res) => {
   if (!req.user) {

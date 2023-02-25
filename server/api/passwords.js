@@ -1,9 +1,9 @@
-const express = require('express')
 const { Passport } = require('passport')
 const authRouter = require('./auth')
 const Password = require('../models/Password.model')
 
-const router = express.Router()
+const AsyncRouter = require("express-async-router").AsyncRouter
+const router = AsyncRouter()
 
 //Actions
 //Add new password [DONE]
