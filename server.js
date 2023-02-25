@@ -21,17 +21,6 @@ async function run() {
     
     app.use(express.urlencoded({ extended: true }));
     app.use(express.json());
-
-    // app.use((req, res, next) => {
-    //     req.user = {
-    //         _id: '12345',
-    //         username: 'marcus',
-    //         password: 'hashedpassword',
-    //     }
-
-    //     next()
-    // })
-
     app.use(session({
         secret: process.env.SESSION_SECRET,
         resave: false,

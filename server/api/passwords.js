@@ -8,26 +8,9 @@ const router = AsyncRouter()
 //Actions
 //Add new password [DONE]
 //Edit existing password (edit value/label) [DONE]
-//Remove an existing password
+//Remove an existing password [DONE]
 //View a password (unasterisk it)
-
 //Collectively view all passwords
-
-// authRouter.get('/current-user', (req, res) => {
-//     if (!req.user) {
-//       return res.json(null)
-//     }
-  
-//     res.json({
-//       email: req.user.email,
-//     })
-//   })
-
-//   label: String,
-//   value: String,
-//   userID: String
-
-//   const user = await User.create({ email, password });
 
 router.post('/', async (req,res) => {
     const existingPW = await Password.findOne({label: req.body.label})
