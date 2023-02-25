@@ -6,7 +6,7 @@ const Password = require('../models/Password.model')
 const router = express.Router()
 
 //Actions
-//Add new password
+//Add new password [DONE]
 //Edit existing password (edit value/label)
 //Remove an existing password
 //View a password (unasterisk it)
@@ -40,6 +40,30 @@ router.post('/', async (req,res) => {
         value: req.body.value,
         userID: req.user._id
     })
+    res.send()
+})
+
+router.put('/:id', async (req,res) => {
+    const existingPW = await Password.findOne({_id: req.params.id}) 
+    if (!existingPW) {
+        res.status(404).send()
+        return
+    }
+    const updates = {}
+    if (req.body.newLabel && req.body.newLabel !== existingPW.label) {
+        const sameLabel = await Password.findOne({label: req.body.newLabel})
+        if (sameLabel) {
+            res.status(400).send()
+            return
+        }
+        updates.label = req.body.newLabel
+    }
+    if (req.body.newValue ** req.body.newValue !== existingPW.value) {
+        updates.value = req.body.newValue
+    }
+    console.log(updates)
+    await Password.updateOne({_id: req.params.id}, updates)
+
     res.send()
 })
 
