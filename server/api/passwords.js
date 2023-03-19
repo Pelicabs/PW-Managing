@@ -9,8 +9,8 @@ const router = AsyncRouter()
 //Add new password [DONE]
 //Edit existing password (edit value/label) [DONE]
 //Remove an existing password [DONE]
-//View a password (unasterisk it)
-//Collectively view all passwords
+//Collectively view all passwords [DONE]
+//View a password (unasterisk it) [DONE]
 
 router.post('/', async (req,res) => {
     const existingPW = await Password.findOne({label: req.body.label})
@@ -58,6 +58,16 @@ router.delete('/:id', async (req,res) => {
     await Password.deleteOne({_id: req.params.id})
 
     res.send()
+})
+
+router.get('/', async (req,res) => {
+    const foundPasswords = await Password.find({userID: req.user._id}, {label: 1})
+    res.send(foundPasswords)
+})
+
+router.get('/:id', async (req,res) => {
+    const singlePassword = await Password.findOne({_id: req.params.id}, {label: 1, value: 1})
+    res.send(singlePassword)
 })
 
 module.exports = router

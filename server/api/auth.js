@@ -20,6 +20,7 @@ authRouter.post('/login', (req, res) => {
             return res.status(400).send('Invalid login')
         }
         req.login(user, () => {
+            console.log(user)
             res.send()
         })
     })(req, res)
