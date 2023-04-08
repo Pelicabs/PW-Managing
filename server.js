@@ -48,8 +48,8 @@ async function run() {
         res.send("hello there")
     })
 
-    app.listen(3000, () => {
-        console.log('server started on port 3000')
+    app.listen(3001, () => {
+        console.log('server started on port 3001')
     }) 
   }
 
