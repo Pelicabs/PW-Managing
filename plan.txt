@@ -11,3 +11,11 @@ Ideas for PW App
 - Login
     - admin
     - ominous password
+
+
+Todos for rest of app (including frontend)
+    - Make a signup/login page [DONE]
+    - Add functionality to signup/login page [DONE]
+    - Not store passwords in plaintext
+    - Make another page to view and manage passwords (break up)
+    - Be able to manage passwords (add, delete, mass delete, reveal one, view all)
