@@ -1,6 +1,8 @@
 const passport = require('passport');
 const LocalStrategy = require('passport-local');
 const User = require('../models/User.model')
+const bcrypt = require('bcrypt')
+const saltRounds = 10;
 
 passport.use(new LocalStrategy({
         usernameField: 'email',
@@ -8,7 +10,7 @@ passport.use(new LocalStrategy({
     }, async function verify(email, password, cb) {
     const user = await User.findOne({ email })
 
-    if (!user || user.password !== password) {
+    if (!user || !await bcrypt.compare(password, user.hashedPW)) {
         return cb(null, false, { message: 'Incorrect username or password.' })
     }
     return cb(null, user)
@@ -26,11 +28,12 @@ passport.use('local-signup', new LocalStrategy({
             return done('User already exists')
         }
 
-        const user = await User.create({ email, password });
+        const hashedPW = await bcrypt.hash(password, saltRounds);
+        const user = await User.create({ email, hashedPW });
         return done(null, user);
     } catch (error) {
         done(error);
-    }
+    } 
   }));
 
 passport.serializeUser((user, done) => {
