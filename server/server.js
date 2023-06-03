@@ -4,9 +4,9 @@ const session = require('express-session');
 const MongoDBStore = require('connect-mongodb-session')(session);
 const passport = require('passport')
 const mongoose = require('mongoose');
-const authRouter = require('./server/api/auth')
-const passwordRouter = require('./server/api/passwords')
-require("./server/lib/passport")
+const authRouter = require('./api/auth')
+const passwordRouter = require('./api/passwords')
+require("./lib/passport")
 
 const app = express()
 

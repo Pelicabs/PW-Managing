@@ -4,6 +4,8 @@ const Password = require('../models/Password.model')
 
 const AsyncRouter = require("express-async-router").AsyncRouter
 const router = AsyncRouter()
+const {encrypt, decrypt} = require('../lib/encrypt')
+
 
 //Actions
 //Add new password [DONE]
@@ -18,9 +20,13 @@ router.post('/', async (req,res) => {
         res.status(400).send()
         return
     }
+
+    const EncryptedPW = await encrypt(req.body.value)
+    const FinalPW = EncryptedPW.encrypted + ":::::" +EncryptedPW.iv
+
     await Password.create({
         label: req.body.label,
-        value: req.body.value,
+        value: FinalPW,
         userID: req.user._id
     })
     res.send()
@@ -41,8 +47,13 @@ router.put('/:id', async (req,res) => {
         }
         updates.label = req.body.newLabel
     }
-    if (req.body.newValue && req.body.newValue !== existingPW.value) {
-        updates.value = req.body.newValue
+    if (req.body.newValue) {
+        const [encrypted, iv] = existingPW.value.split(":::::")
+        const OldPW = await decrypt({encrypted, iv})
+        if (OldPW !== req.body.newValue) {
+            const EncryptedPW = await encrypt(req.body.newValue)
+            updates.value = EncryptedPW.encrypted + ":::::" +EncryptedPW.iv
+        }
     }
     await Password.updateOne({_id: req.params.id}, updates)
 
@@ -67,7 +78,9 @@ router.get('/', async (req,res) => {
 
 router.get('/:id', async (req,res) => {
     const singlePassword = await Password.findOne({_id: req.params.id}, {label: 1, value: 1})
-    res.send(singlePassword)
+    const [encrypted, iv] = singlePassword.value.split(":::::")
+    const decrypted = await decrypt({encrypted, iv})
+    res.send(decrypted)
 })
 
 module.exports = router
